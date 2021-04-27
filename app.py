@@ -3,12 +3,6 @@ import cbpro
 import math
 import boto3
 
-# ----- GLOBALS -----
-# TODO: Make this stuff more secure you dum dum
-API_SECRET = "zH+0NaE/9FMtF5HK5bEv2u+oFdXbjNNCKnx+Iq6P7lM16ybWPRW1tFmhYArXCoFB0W12qJA8jso/G5mTQ3suKg=="
-API_KEY = "382fe2a34363b8d4d937c61cdcbc8a59"
-API_PASS = "g74zbn0mkic"
-api_url = 'https://api.pro.coinbase.com'
 
 # Auth Client
 auth_client = cbpro.AuthenticatedClient(API_KEY, API_SECRET, API_PASS, api_url)
@@ -22,22 +16,6 @@ app = Chalice(app_name='helloworld')
 stoploss_val = 0.98
 exit_position = 1.05
 
-
-account_ids = {
-    'LINK-BTC': 'b9967609-3379-4f48-a126-9e816e9ff625',
-    'XLM-BTC': 'da47bc6a-9a69-476c-ba37-ff57e338bd20',
-    'ATOM-BTC': 'fb2984b4-bd06-4b25-a735-37bc9cc19ffd',
-    'ZRX-BTC': '8357d81c-8a66-46ea-a9a8-500fa4f1733b',
-    'ADA-BTC': '3071fd8a-e326-4217-a478-b345cdae67f1',
-    'ETH-BTC': '058efe2d-97ff-49fc-a92b-77eb61e8ec76',
-    'FIL-BTC': '690a7ab3-3fe3-4696-baab-0400e31a92b4',
-    'MKR-BTC': '15bd9ea0-6e23-4357-b894-7f080cb29578',
-    'OMG-BTC': 'fe49d4b2-38cc-43c6-807b-5952054b0d7e',
-    'ZEC-BTC': '8d20086f-b60c-4c67-ac4d-3d348c28fd89',
-    'ETC-BTC': 'cb653b55-19a4-412a-8b08-8fdfeb6489e6',
-    'BCH-BTC': 'b089ad31-1756-40c5-8153-d9330efc68a3',
-    'LTC-BTC': '4e507a70-b055-473a-abc0-3210c608d9b2'
-}
 
 # ----- Helper functions -----
 
@@ -107,36 +85,8 @@ def get_balance(pair, accounts):
 
 
 def check_balance(pair, accounts):
-    balance = get_balance(pair, accounts)
-    
-    if pair == 'XLM-BTC': 
-        balance_check_val = 100
-    elif pair == 'LINK-BTC':
-        balance_check_val = 1
-    elif pair == 'ATOM-BTC':
-        balance_check_val = 1
-    elif pair == 'ZRX-BTC':
-        balance_check_val = 100
-    elif pair == 'LTC-BTC':
-        balance_check_val = 1
-    elif pair == 'ETH-BTC':
-        balance_check_val = 0.1
-    elif pair == 'ETC-BTC':
-        balance_check_val = 10
-    elif pair == 'BCH-BTC':
-        balance_check_val = 0.1
-    elif pair == 'ADA-BTC':
-        balance_check_val = 100
-    elif pair == 'MKR-BTC':
-        balance_check_val = 0.1
-    elif pair == 'OMG-BTC':
-        balance_check_val = 10
-    elif pair == 'ZEC-BTC':
-        balance_check_val = 1
-    elif pair == 'FIL-BTC':
-        balance_check_val = 1
-
-    return balance_check_val
+    """TODO"""
+    pass
 
 
 def market_buy(pair, stake):
@@ -155,54 +105,6 @@ def market_sell(pair, balance):
     print("{} SELL EXECUTED".format(pair))
     print(sell)
 
-
-# ----- S3 Value Storage Methods -----
-
-def get_last_buy_price(pair):
-    # Returns float value of last buy price for pair
-    bucket_name = "botboibucket"
-    s3_path = pair + "/last_buy_price"
-    s3 = boto3.resource("s3")
-    ob = s3.Object(bucket_name, s3_path)
-    last_buy_price = ob.get()['Body'].read().decode('utf-8')
-    return float(last_buy_price)
-
-
-def set_last_buy_price(pair, close):
-    # Stores value of last buy price for pair
-    bucket_name = "botboibucket"
-    s3_path = pair + "/last_buy_price"
-    s3 = boto3.resource("s3")
-    encoded_string = str(close).encode("utf-8")
-    s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
-
-
-def set_last_sell_price(pair, close):
-    # Stores value of last buy price for pair
-    bucket_name = "botboibucket"
-    s3_path = pair + "/last_sell_price"
-    s3 = boto3.resource("s3")
-    encoded_string = str(close).encode("utf-8")
-    s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
-
-
-def get_last_check_price(pair):
-    # Returns float value of last check price for pair
-    bucket_name = "botboibucket"
-    s3_path = pair + "/last_check_price"
-    s3 = boto3.resource("s3")
-    ob = s3.Object(bucket_name, s3_path)
-    last_check_price = ob.get()['Body'].read().decode('utf-8')
-    return float(last_check_price)
-
-
-def set_last_check_price(pair, checkprice):
-    # Stores value of last buy price for pair
-    bucket_name = "botboibucket"
-    s3_path = pair + "/last_check_price"
-    s3 = boto3.resource("s3")
-    encoded_string = str(checkprice).encode("utf-8")
-    s3.Bucket(bucket_name).put_object(Key=s3_path, Body=encoded_string)
 
 
 
