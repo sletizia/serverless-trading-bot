@@ -47,41 +47,8 @@ def get_current_price(pair):
 
 
 def get_balance(pair, accounts):
-    pair_id = account_ids[pair]
-    for i in accounts:
-        if i['id'] == pair_id:
-            balance = i['balance']
-    # each pair needs to be truncated to a different decimal place
-    # number is based on the base tick size here:  https://pro.coinbase.com/markets
-    if pair == 'LINK-BTC':
-        return truncate(float(balance), 3)
-    elif pair == 'XLM-BTC':
-        return truncate(float(balance))
-    elif pair == 'ATOM-BTC':
-        return truncate(float(balance), 2)
-    elif pair =='ZRX-BTC':
-        return truncate(float(balance), 6)
-    elif pair =='LTC-BTC':
-        return truncate(float(balance), 9)
-    elif pair =='ETH-BTC':
-        return truncate(float(balance), 9)
-    elif pair =='ETC-BTC':
-        return truncate(float(balance), 9)
-    elif pair =='BCH-BTC':
-        return truncate(float(balance), 9)
-    elif pair =='ADA-BTC':
-        return truncate(float(balance), 3)
-    elif pair =='MKR-BTC':
-        return truncate(float(balance), 6)
-    elif pair =='OMG-BTC':
-        return truncate(float(balance))
-    elif pair =='ZEC-BTC':
-        return truncate(float(balance), 5)
-    elif pair =='FIL-BTC':
-        return truncate(float(balance), 4)
-    else:
-        print("PAIR INVALID or something like that")
-        return(1000)
+    """TODO"""
+    pass
 
 
 def check_balance(pair, accounts):
