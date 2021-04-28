@@ -4,8 +4,8 @@ from datetime import datetime
 
 
 class S3Connector:
-    def __init__(self):
-        self.bucket_name = "botboibucket"
+    def __init__(self, config_settings):
+        self.bucket_name = config_settings["bucketName"]
 
 
     def get_last_buy_price(self, asset_name):
@@ -52,12 +52,16 @@ class S3Connector:
 
 
 if __name__ == "__main__":
+    # Load Config
+    from config_reader import ConfigReader
+    cf = ConfigReader()
+    s3_config = cf.load_config_from_file("config.json")["s3"]
 
-    # Tests
+    # Test Variables
     test_asset_name = "TEST"
     test_close_price = "734.50"
 
-    S3 = S3Connector()
+    S3 = S3Connector(s3_config)
     # Test 1
     #S3.set_last_buy_price(test_asset_name, test_close_price)
     #print(S3.get_last_buy_price(test_asset_name))

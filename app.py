@@ -1,83 +1,9 @@
 from chalice import Chalice
 import cbpro
 import math
-import boto3
 
 
-# Auth Client
-auth_client = cbpro.AuthenticatedClient(API_KEY, API_SECRET, API_PASS, api_url)
-
-# Public Client
-public_client = cbpro.PublicClient()
-
-app = Chalice(app_name='helloworld')
-
-# Globals
-stoploss_val = 0.98
-exit_position = 1.05
-
-
-# ----- Helper functions -----
-
-def truncate(n, decimals=0):
-    multiplier = 10 ** decimals
-    return int(n * multiplier) / multiplier
-
-
-# ----- Coinbase API Methods -----
-
-def active_order(pair):
-    orders = auth_client.get_orders(product_id=pair)
-    order_count = 0
-    for i in orders:
-        order_count += 1
-    if order_count > 0:
-        return True
-    else:
-        return False
-
-
-def get_current_price(pair):
-    # Returns the current price from public coinbase api
-
-    orderbook = public_client.get_product_order_book(pair, level=1)
-    current_price = orderbook['asks'][0][0]
-
-    return float(current_price)
-
-
-def get_balance(pair, accounts):
-    """TODO"""
-    pass
-
-
-def check_balance(pair, accounts):
-    """TODO"""
-    pass
-
-
-def market_buy(pair, stake):
-    # Initiates a buy order
-    buy = auth_client.buy(funds=stake,
-            order_type='market',
-            product_id=pair)
-    print("{} BUY EXECUTED".format(pair))
-    print(buy)
-
-
-def market_sell(pair, balance):
-    sell = auth_client.sell(size=balance,
-                                    order_type='market',
-                                    product_id=pair)
-    print("{} SELL EXECUTED".format(pair))
-    print(sell)
-
-
-
-
-init_stop = 0.98 # 2% Risk
-trail_stop = 0.99 # 5% Trailing stop exit signal
-win_trigger = 1.05 # 5% Reward level
+app = Chalice(app_name='tradingbot')
 
 """# ----- Bot Heartbeat -----
 @app.schedule('rate(1 minute)')
@@ -96,10 +22,8 @@ def buy():
     pair = webhook_message["pair"]
     close = webhook_message["close"]
 
-    print("{} BUY SIGNAL INITIATED".format(pair))
-    accounts = auth_client.get_accounts()
-
-    balance = get_balance(pair, accounts)
+    print("{} BUY SIGNAL RECEIVED".format(pair))
+    
     if balance > check_balance(pair, accounts):
         # No buy happens
         message = "{} Already an active order, no action taken.".format(pair)
