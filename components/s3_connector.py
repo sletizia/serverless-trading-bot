@@ -63,8 +63,8 @@ if __name__ == "__main__":
 
     S3 = S3Connector(s3_config)
     # Test 1
-    #S3.set_last_buy_price(test_asset_name, test_close_price)
-    #print(S3.get_last_buy_price(test_asset_name))
+    S3.set_last_buy_price(test_asset_name, test_close_price)
+    print(S3.get_last_buy_price(test_asset_name))
 
     # Test 2
     S3.log_position_entered(test_asset_name, test_close_price)

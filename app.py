@@ -2,20 +2,28 @@ from chalice import Chalice
 import cbpro
 import math
 
+# Componenent Imports
+from components.config_reader import ConfigReader
+from components.s3_connector import S3Connector
+from components.coinbasepro_connector import CBProConnector
+
 
 app = Chalice(app_name='tradingbot')
 
-"""# ----- Bot Heartbeat -----
+cf = ConfigReader()
+config_values = cf.load_config_from_file("config.json")
+
+s3 = S3Connector(config_values["s3"])
+cbpro = CBProConnector(config_values["cbpro"])
+
+# ----- Bot Heartbeat -----
 @app.schedule('rate(1 minute)')
 def heartbeat(event):
     print("BOTBOIT HEARTBEAT -- I AM ALIVE!")
     accounts = auth_client.get_accounts()
-"""
-            
-    
-stake = '0.01' # amount of btc in each position, allocate carefully
 
-@app.route('/buy', methods=['POST'])
+
+@app.route('/buy_crypto', methods=['POST'])
 def buy():
     request = app.current_request
     webhook_message = request.json_body
@@ -23,10 +31,10 @@ def buy():
     close = webhook_message["close"]
 
     print("{} BUY SIGNAL RECEIVED".format(pair))
-    
-    if balance > check_balance(pair, accounts):
-        # No buy happens
-        message = "{} Already an active order, no action taken.".format(pair)
+    balance = cbpro.get_balance(pair)
+    if balance > 0.001: # not zero incase there are a few cents left after a trade
+        # If we are already holding the coin we don't buy more
+        message = "{} Already holding coin, no action taken.".format(pair)
         transaction = None
         print("Message: {}".format(message))
         print("Transaction: {}".format(transaction))
@@ -35,12 +43,9 @@ def buy():
     
     else:
         # Execute a buy
-        market_buy(pair, stake)
-
-        set_last_buy_price(pair, close)
-        set_last_check_price(pair, close * win_trigger)
-
-        message = "{} Buy signal triggered an execution sequence. A buy was placed and the close price recorded in s3".format(pair)
+        cbpro.market_buy_stake(pair)
+        s3.set_last_buy_price(pair, close)
+        message = "{} Buy executed at {}"
 
         print("Message: {}".format(message))
         print("Size: {}".format(balance))
@@ -50,22 +55,20 @@ def buy():
                 "Close": close}
 
 
-@app.route('/sell', methods=['POST'])
+@app.route('/sell_crypto', methods=['POST'])
 def sell():
     request = app.current_request
     webhook_message = request.json_body
     pair = webhook_message["pair"]
     close = webhook_message["close"]
 
-    print("{} SELL SIGNAL INITIATED".format(pair))
-    accounts = auth_client.get_accounts()
+    print("{} SELL SIGNAL RECEIVED".format(pair))
 
-    balance = get_balance(pair, accounts)
-    if balance > check_balance(pair, accounts):
-        # Execute a sell
-        sell = market_sell(pair, balance)
-        print(sell)
-        message = "{} Sell signal triggered an execution sequence. A sell was placed".format(pair)
+    balance = cbpro.get_balance(pair)
+    if balance > 0.001:
+        # If we are holding the coin we sell
+        cbpro.market_sell_all(pair)
+        message = "{} Sell executed at {}".format(pair)
         
         return {"LOG": message,
                 "Close": close}

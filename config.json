@@ -5,7 +5,7 @@
         "apiSecret": "zH+0NaE/9FMtF5HK5bEv2u+oFdXbjNNCKnx+Iq6P7lM16ybWPRW1tFmhYArXCoFB0W12qJA8jso/G5mTQ3suKg==",
         "apiUrl": "https://api.pro.coinbase.com",
         "accountIds": {
-            "LINK-BTC":"'b9967609-3379-4f48-a126-9e816e9ff625",
+            "LINK-BTC":"b9967609-3379-4f48-a126-9e816e9ff625",
             "XLM-BTC": "da47bc6a-9a69-476c-ba37-ff57e338bd20",
             "ATOM-BTC": "fb2984b4-bd06-4b25-a735-37bc9cc19ffd",
             "ZRX-BTC": "8357d81c-8a66-46ea-a9a8-500fa4f1733b",
