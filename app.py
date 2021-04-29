@@ -72,4 +72,3 @@ def sell():
         
         return {"LOG": message,
                 "Close": close}
-    
