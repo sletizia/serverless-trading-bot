@@ -19,7 +19,7 @@ cbpro = CBProConnector(config_values["cbpro"])
 # ----- Bot Heartbeat -----
 @app.schedule('rate(1 minute)')
 def heartbeat(event):
-    print("BOTBOIT HEARTBEAT -- I AM ALIVE!")
+    print("BOTBOIT HEARTBEAT -- HELLO I AM ALIVE!")
     accounts = auth_client.get_accounts()
 
 
