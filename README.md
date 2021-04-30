@@ -48,7 +48,10 @@ Json Schema:
         "apiPass": "",
         "apiSecret": "",
         "apiUrl": "",
-        "accountIds": {"ETH-BTC": "example-account-id"},
+        "accountIds": {
+          "ETH-BTC": "example-account-id",
+          "LTC-BTC": "another-account-id"
+        },
         "stakeBTC": "0.0"
     },
     "s3": {
@@ -61,11 +64,9 @@ Json Schema:
     }
 }
 ```
-the `accountIds: {}` element needs to be populated manually right now. To do that use the "get_accounts()" method from the cbpro package in the python cmd line console. You need your api key information for this step as well:
-```bash
-python3
-```
+the `accountIds` element needs to be populated manually with an id for each coin you want to trade. To do that use the "get_accounts()" method from the cbpro package in the python cmd line console. You need your api key information for this step as well:
 
+`python3` to open the cmd line python console or run this code from a file
 ```python
 import cbpro
 
@@ -81,7 +82,27 @@ auth_client.get_accounts()
 
 ## Components
 
+### Coinbase Pro Connector
+Wrapper for the cbpro coinbase pro api.
+#### Input: cbpro config settings (api key info and account ids)
+#### Methods:
+* get_current_price(pair) - returns a float, the current price of a crypto asset or pair
+* get_balance(pair) - returns a float, the balance of one of your crypto accounts
+* market_buy(pair) - executes a market buy order
+* market_sell(pair, balance) - executes a market sell order
 
+### S3 Connector
+Wrapper for storing values in an AWS S3 bucket uses boto3
+#### Input: S3 config settings (bucket name)
+#### Methods: 
+* get_last_buy_price(asset_name) - reutnrs a float, the last buy price stored in bucket
+* set_last_buy_price(asset_name, close) - stores close price in bucket
+* more coming soon
+
+### Config Reader
+Reads the config.json file and returns config settings
+#### Methods: 
+* load_config_from_file(configfilepath) - returns a dictionary, the elements stored in the config.json file
 
 ## Investment Disclaimer
 All investment strategies and investments involve risk of loss.  Nothing contained in this readme should be construed as investment advice.  Any reference to an investment’s or bot's past or potential performance is not, and should not be construed as, a recommendation or as a guarantee of any specific outcome or profit. You should always monitor your investements. Only use this implementation in a live trading setting if you know what you are doing and are prepared to potentially lose your investment.
