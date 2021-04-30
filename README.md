@@ -84,8 +84,9 @@ auth_client.get_accounts()
 
 ### Coinbase Pro Connector
 Wrapper for the cbpro coinbase pro api.
-#### Input: cbpro config settings (api key info and account ids)
-#### Methods:
+##### Input: 
+cbpro config settings (api key info and account ids)
+##### Methods:
 * get_current_price(pair) - returns a float, the current price of a crypto asset or pair
 * get_balance(pair) - returns a float, the balance of one of your crypto accounts
 * market_buy(pair) - executes a market buy order
@@ -93,8 +94,9 @@ Wrapper for the cbpro coinbase pro api.
 
 ### S3 Connector
 Wrapper for storing values in an AWS S3 bucket uses boto3
-#### Input: S3 config settings (bucket name)
-#### Methods: 
+##### Input: 
+S3 config settings (bucket name)
+##### Methods: 
 * get_last_buy_price(asset_name) - reutnrs a float, the last buy price stored in bucket
 * set_last_buy_price(asset_name, close) - stores close price in bucket
 * more coming soon
