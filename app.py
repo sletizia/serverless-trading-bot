@@ -19,7 +19,7 @@ cbpro = CBProConnector(config_values["cbpro"])
 # ----- Bot Heartbeat -----
 @app.schedule('rate(1 minute)')
 def heartbeat(event):
-    print("BOTBOIT HEARTBEAT -- HELLO I AM ALIVE!")
+    print("TRADING BOT HEARTBEAT -- HELLO I AM ALIVE!")
     accounts = auth_client.get_accounts()
 
 
@@ -38,21 +38,19 @@ def buy():
         transaction = None
         print("Message: {}".format(message))
         print("Transaction: {}".format(transaction))
-        return {"LOG": message,
-                "transaction": transaction}
+        return {}
     
     else:
         # Execute a buy
         cbpro.market_buy_stake(pair)
         s3.set_last_buy_price(pair, close)
-        message = "{} Buy executed at {}"
+        message = "{} Buy executed at {}".format(pair, close)
 
         print("Message: {}".format(message))
         print("Size: {}".format(balance))
         print("Close: {}".format(close))
 
-        return {"LOG": message,
-                "Close": close}
+        return {}
 
 
 @app.route('/sell_crypto', methods=['POST'])
@@ -67,8 +65,7 @@ def sell():
     balance = cbpro.get_balance(pair)
     if balance > 0.001:
         # If we are holding the coin we sell
-        cbpro.market_sell_all(pair)
-        message = "{} Sell executed at {}".format(pair)
+        cbpro.market_sell_all(pair, balance)
+        message = "{} Sell executed at {}".format(pair, close)
         
-        return {"LOG": message,
-                "Close": close}
+        return {}

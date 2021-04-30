@@ -1,6 +1,5 @@
 import cbpro
 import math
-from config_reader import ConfigReader
 
 
 class CBProConnector:
@@ -87,17 +86,17 @@ class CBProConnector:
 
     def market_buy_stake(self, pair):
         # Initiates a buy order
-        buy = auth_client.buy(funds=self.stake,
+        buy = self.auth_client.buy(funds=self.stake,
                 order_type='market',
                 product_id=pair)
         print("{} BUY EXECUTED: {}".format(pair, buy))
 
 
-    def market_sell_all(pair, balance):
-        sell = auth_client.sell(size=balance,
+    def market_sell_all(self, pair, balance):
+        sell = self.auth_client.sell(size=balance,
                                         order_type='market',
                                         product_id=pair)
-        print("{} SELL EXECUTED: {}".format(pair, buy))
+        print("{} SELL EXECUTED: {}".format(pair, sell))
 
 
     def take_profits(pair):
